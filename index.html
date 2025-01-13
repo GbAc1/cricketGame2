@@ -5,74 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cricket Game</title>
     <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        font-family: Arial, sans-serif;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: antiquewhite;
-      }
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: antiquewhite;
+}
 
-      .container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-      table {
-        margin: auto;
-        border-collapse: collapse;
-        margin-top: 20px;
-        width: 100%;
-        max-width: 700px;
-      }
+table {
+  margin: auto;
+  border-collapse: collapse;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 700px;
+}
 
-      th,
-      td {
-        border: 1px solid black;
-        padding: 8px;
-      }
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+}
 
-      .button-container {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 10px 0;
-      }
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
 
-      button {
-        size: large;
-        font-style: normal;
-        font-weight: bold;
-        background-color: blueviolet;
-        margin: 0;
-        padding: 5px 5px;
-        cursor: pointer;
-        min-width: 80px;
-        border: none; /* Remove button border */
-      }
+/* For creating circular buttons with consistent size */
+button {
+  border-radius: 50%;
+  background-color: blueviolet;
+  cursor: pointer;
+  border: none;
+  width: 120px;
+  height: 120px;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-      button img {
-        width: 100px; /* Set a uniform width */
-        height: 100; /* Set a uniform height */
-        object-fit: contain; /* Ensures the image scales correctly without distortion */
-        display: block; /* Removes extra space below the image */
-        margin: auto;
-      }
+/* For maintaining consistent image dimensions and circular shape */
+button img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
-      .history-table {
-        margin-top: 30px;
-      }
+/* For spacing between game history and other elements */
+.history-table {
+  margin-top: 30px;
+}
 
-      p {
-        max-width: 600px;
-        margin: 0 auto;
-      }
+/* For controlling text width and spacing */
+p {
+  max-width: 600px;
+  margin: 0 auto;
+}
     </style>
   </head>
   <body>
