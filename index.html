@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cricket Game</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: antiquewhite;
+      }
+
+      .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      table {
+        margin: auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 700px;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 10px 0;
+      }
+
+      button {
+        size: large;
+        font-style: normal;
+        font-weight: bold;
+        background-color: blueviolet;
+        margin: 0;
+        padding: 5px 5px;
+        cursor: pointer;
+        min-width: 80px;
+        border: none; /* Remove button border */
+      }
+
+      button img {
+        width: 100px; /* Set a uniform width */
+        height: 100; /* Set a uniform height */
+        object-fit: contain; /* Ensures the image scales correctly without distortion */
+        display: block; /* Removes extra space below the image */
+        margin: auto;
+      }
+
+      .history-table {
+        margin-top: 30px;
+      }
+
+      p {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Bat Ball Stump Game</h1>
+      <p>
+        <strong>Game Rules:</strong><br />
+        1. Choose either Bat, Ball, or Stump.<br />
+        2. The computer will also randomly choose one of the three.<br />
+        3. The winner is determined as follows:<br />
+        &nbsp;&nbsp;a. Bat vs Ball: User wins<br />
+        &nbsp;&nbsp;b. Ball vs Stump: User wins<br />
+        &nbsp;&nbsp;c. Stump vs Bat: User wins<br />
+        &nbsp;&nbsp;d. Bat vs Stump: Computer wins<br />
+        &nbsp;&nbsp;e. Stump vs Ball: Computer wins<br />
+        &nbsp;&nbsp;f. Ball vs Bat: Computer wins<br />
+        &nbsp;&nbsp;g. Same choices result in a tie<br />
+        <br /><br />
+        4. Reset button is added to reset the score in case you<br />
+        want to start fresh.
+      </p>
+
+      <div class="button-container">
+        <button onclick="handleUserChoice('Bat')">
+          <img src="cricketBat.jpg" alt="Bat" />
+        </button>
+        <button onclick="handleUserChoice('Ball')">
+          <img src="cricketBall.jpg" alt="Ball" />
+        </button>
+        <button onclick="handleUserChoice('Stump')">
+          <img src="cricketStump.jpg" alt="Stump" />
+        </button>
+        <button onclick="resetGame()">
+          <img src="reset.png" alt="Reset" />
+        </button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Ties</th>
+            <th>Last User Move</th>
+            <th>Last Computer Move</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="winCount">0</td>
+            <td id="loseCount">0</td>
+            <td id="tieCount">0</td>
+            <td id="userMove">-</td>
+            <td id="computerMove">-</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>User Move</th>
+            <th>Computer Move</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody"></tbody>
+      </table>
+    </div>
+
+    <script>
+      let score = loadScore();
+
+      function loadScore() {
+        const savedScore = localStorage.getItem("score");
+        return savedScore
+          ? JSON.parse(savedScore)
+          : { win: 0, lost: 0, tie: 0, history: [] };
+      }
+
+      function resetGame() {
+        score = { win: 0, lost: 0, tie: 0, history: [] };
+        localStorage.setItem("score", JSON.stringify(score));
+        updateScoreTable("-", "-");
+        document.getElementById("historyTableBody").innerHTML = "";
+      }
+
+      function updateScoreTable(userMove, computerMove) {
+        document.getElementById("winCount").textContent = score.win;
+        document.getElementById("loseCount").textContent = score.lost;
+        document.getElementById("tieCount").textContent = score.tie;
+        document.getElementById("userMove").textContent = userMove;
+        document.getElementById("computerMove").textContent = computerMove;
+      }
+
+      function updateHistoryTable(round, userMove, computerMove, result) {
+        const historyTableBody = document.getElementById("historyTableBody");
+        const row = historyTableBody.insertRow(0);
+        row.insertCell(0).textContent = round;
+        row.insertCell(1).textContent = userMove;
+        row.insertCell(2).textContent = computerMove;
+        row.insertCell(3).textContent = result;
+      }
+
+      function generateComputerChoice() {
+        const choices = ["Bat", "Ball", "Stump"];
+        return choices[Math.floor(Math.random() * choices.length)];
+      }
+
+      function getResult(userMove, computerMove) {
+        if (userMove === computerMove) {
+          score.tie++;
+          return "Tie";
+        }
+        if (
+          (userMove === "Bat" && computerMove === "Ball") ||
+          (userMove === "Ball" && computerMove === "Stump") ||
+          (userMove === "Stump" && computerMove === "Bat")
+        ) {
+          score.win++;
+          return "Win";
+        } else {
+          score.lost++;
+          return "Lost";
+        }
+      }
+
+      function handleUserChoice(userMove) {
+        const computerMove = generateComputerChoice();
+        const result = getResult(userMove, computerMove);
+
+        score.history.push({ userMove, computerMove, result });
+        localStorage.setItem("score", JSON.stringify(score));
+
+        updateScoreTable(userMove, computerMove);
+        updateHistoryTable(
+          score.history.length,
+          userMove,
+          computerMove,
+          result
+        );
+
+        alert(
+          `You chose ${userMove}. Computer chose ${computerMove}.\n${result}!\n\nMatches Won: ${score.win}, Lost: ${score.lost}, Tie: ${score.tie}`
+        );
+      }
+
+      updateScoreTable("-", "-");
+      score.history.forEach((move, index) => {
+        updateHistoryTable(
+          index + 1,
+          move.userMove,
+          move.computerMove,
+          move.result
+        );
+      });
+    </script>
+  </body>
+</html>
